@@ -30,4 +30,21 @@ async function postPredictHandler(request, h) {
   return response;
 }
 
-module.exports = postPredictHandler;
+async function getPredictionHistoriesHandler(request, h) {
+  const db = new Firestore();
+  const historiesget = await db.collection('predictions').get();
+  let historiesArr = [];
+  historiesget.forEach(doc => {
+      historiesArr.push(doc.data());
+  });
+
+  const response = h.response({
+      status: 'success',
+      data: historiesArr
+  });
+  response.code(200);
+  return response;
+}
+
+
+module.exports = { postPredictHandler, getPredictionHistoriesHandler};
